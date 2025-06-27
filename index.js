@@ -1,19 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables
+
 const app = express();
+const port = process.env.PORT || 1000;
+
+// Middleware
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI, {
+// Routes
+const bookingRoutes = require('./routes/bookings');
+app.use('/api/bookings', bookingRoutes);
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log("MongoDB connected"))
-  .catch(err => console.log("Mongo error:", err));
+})
+.then(() => console.log('✅ Connected to MongoDB'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Routes
-app.use('/api/bookings', require('./routes/bookings'));
-
-app.get('/', (req, res) => res.send("CampusVibe Backend Running!"));
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start server
+app.listen(port, () => {
+  console.log(`🚀 Server running on port ${port}`);
+});

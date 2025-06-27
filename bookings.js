@@ -3,7 +3,6 @@ const router = express.Router();
 
 // In-memory bookings (temporary until DB model added)
 const bookings = [];
-
 // GET route
 router.get('/', (req, res) => {
   res.json({ message: "Bookings API working" });

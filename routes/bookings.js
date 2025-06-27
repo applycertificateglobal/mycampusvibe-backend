@@ -1,23 +1,31 @@
 const express = require('express');
 const router = express.Router();
+const Booking = require('../models/Booking'); // 👈 new import
 
-// In-memory bookings (temporary until DB model added)
-const bookings = [];
-// GET route
-router.get('/', (req, res) => {
-  res.json({ message: "Bookings API working" });
+// GET all bookings
+router.get('/', async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    res.json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
-// POST route
-router.post('/', (req, res) => {
+// POST new booking
+router.post('/', async (req, res) => {
   const { name, email, date } = req.body;
   if (!name || !email || !date) {
-    return res.status(400).json({ error: "Missing fields" });
+    return res.status(400).json({ error: 'Missing fields' });
   }
 
-  const newBooking = { id: Date.now(), name, email, date };
-  bookings.push(newBooking);
-  res.status(201).json(newBooking);
+  try {
+    const newBooking = new Booking({ name, email, date });
+    await newBooking.save();
+    res.status(201).json(newBooking);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save booking' });
+  }
 });
 
 module.exports = router;

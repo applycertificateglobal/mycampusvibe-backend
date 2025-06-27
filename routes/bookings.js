@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Booking = require('../models/Booking'); // 👈 new import
+const Booking = require('../model/Booking'); // 👈 new import
 
 // GET all bookings
 router.get('/', async (req, res) => {

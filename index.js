@@ -7,6 +7,9 @@ const port = process.env.PORT || 1000;
 
 // Middleware
 app.use(express.json());
+app.get('/', (req, res) => {
+  res.send('Hello from MyCampusVibe backend');
+});
 
 // Routes
 const bookingRoutes = require('./routes/bookings');
